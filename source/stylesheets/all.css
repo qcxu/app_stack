@@ -1,0 +1,32 @@
+.background {
+	fill: none;
+	pointer-events: all;
+}
+
+#states {
+	fill: #aaa;
+}
+
+#states .active {
+	fill: orange;
+}
+
+#regions {
+	fill: none;
+}
+
+text {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	pointer-events: none;
+	opacity: 0.25;
+}
+
+#region-borders {
+	fill: none;
+	stroke: #fff;
+	stroke-width: 1.5px;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	pointer-events: none;
+}
