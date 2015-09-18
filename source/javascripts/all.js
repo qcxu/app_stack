@@ -5,12 +5,17 @@ var svg = d3.select("#vis_canvas");
 var width = svg.attr("width");
 console.log(width);
 var height = svg.attr("height");
-var projection = d3.geo.albersUsa()
-				.translate([width / 2, height / 2])
-				.scale([1280]);
+var projection = d3.geo.albers()
+    .translate([width / 2, height / 2])
+    .scale(1080);
 //Define path generator
 var path = d3.geo.path()
 			.projection(projection);
+			
+var voronoi = d3.geom.voronoi()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; })
+    .clipExtent([[0, 0], [width, height]]);
 			
 svg.append("rect")
 .attr("class", "background")
@@ -20,10 +25,56 @@ svg.append("rect")
 
 var g = svg.append("g");
 
+queue()
+    .defer(d3.json, "./dmt.json")
+    .defer(d3.csv, "./centroid.csv")
+    .defer(d3.csv, "/conn.csv")
+    .await(ready);
+
+
 //Load in GeoJSON data
-d3.json("./dmt.json", function(error, app) {
+function ready(error, app, cntr, conn) {
 	if (error) throw error;
 	console.log(app);
+	console.log(cntr);
+	console.log(conn);
+	
+	var stateById = d3.map(),
+    positions = [];
+
+  	cntr.forEach(function(d) {	
+    	stateById.set(d.STATE, d);
+    	d.outgoing = [];
+    	d.incoming = [];
+  	});
+  	console.log(stateById);
+  	
+  	conn.forEach(function(d) {
+	    var source = stateById.get(d.origin),
+	        target = stateById.get(d.destination),
+	        link = {source: source, target: target};
+	        console.log(source);
+	        console.log(target);
+	    source.outgoing.push(link);
+	    target.incoming.push(link);
+	  });
+	console.log(stateById);
+  	
+  	cntr = cntr.filter(function(d) {
+	    if (d.count = Math.max(d.incoming.length, d.outgoing.length)) {
+	      d[0] = +d.X;
+	      d[1] = +d.Y;
+	      var position = projection(d);
+	      d.x = position[0];
+	      d.y = position[1];
+	      return true;
+	    }
+	});
+	console.log(cntr);
+
+  	voronoi(cntr)
+      .forEach(function(d) { d.point.cell = d; });
+	
 	//Bind data and create one path per GeoJSON feature
 	g.append("g")
 		.attr("id", "states")
@@ -56,8 +107,31 @@ d3.json("./dmt.json", function(error, app) {
 	.attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
 	.attr("dx", "-1em")
 	.text(function(d) { return d.properties.NAME; });
+	
+	// Centroid
+	var airport = svg.append("g")
+      .attr("class", "airports")
+    .selectAll("g")
+      .data(cntr.sort(function(a, b) { return b.count - a.count; }))
+    .enter().append("g")
+      .attr("class", "airport");
+      
+    airport.append("path")
+      .attr("class", "airport-cell")
+      .attr("d", function(d) { return d.cell.length ? "M" + d.cell.join("L") + "Z" : null; });
+      
+    airport.append("g")
+      .attr("class", "airport-arcs")
+    .selectAll("path")
+      .data(function(d) { return d.outgoing; })
+    .enter().append("path")
+      .attr("d", function(d) { return path({type: "LineString", coordinates: [d.source, d.target]}); });
 
-});
+  airport.append("circle")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .attr("r", function(d, i) { return Math.sqrt(d.count); });
+
+};
 	//Create SVG element
 	
 	

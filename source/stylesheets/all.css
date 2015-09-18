@@ -30,3 +30,29 @@ text {
 	stroke-linecap: round;
 	pointer-events: none;
 }
+
+.airport-arcs {
+  display: none;
+  fill: none;
+  stroke: #000;
+}
+
+.airport-cell {
+  fill: none;
+  pointer-events: all;
+}
+
+.airports circle {
+  fill: steelblue;
+  stroke: #fff;
+  pointer-events: none;
+}
+
+.airport:hover .airport-arcs {
+  display: inline;
+}
+
+svg:not(:hover) .airport-cell {
+  stroke: #000;
+  stroke-opacity: .2;
+}
