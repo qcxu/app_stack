@@ -1,0 +1,15 @@
+---
+title: Application Stack
+---
+
+<svg id="vis_canvas" height="800" width="1280" style="border: 1px solid black;"></svg>
+<script>
+var svg = d3.select("#vis_canvas");
+console.log(svg);
+var width = svg.attr("width");
+console.log(width);
+var height = svg.attr("height");
+// Create a new MeetingVis object (defined in meetings.js) and tell it to render.
+map_vis = new MapVis();
+map_vis.render();
+</script>

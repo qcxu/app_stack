@@ -44,8 +44,9 @@ function ready(error, app, cntr, conn) {
 
   	cntr.forEach(function(d) {	
     	stateById.set(d.STATE, d);
-    	d.outgoing = [];
-    	d.incoming = [];
+    	d.linking = [];
+    	//d.outgoing = [];
+    	//d.incoming = [];
   	});
   	console.log(stateById);
   	
@@ -55,13 +56,15 @@ function ready(error, app, cntr, conn) {
 	        link = {source: source, target: target};
 	        console.log(source);
 	        console.log(target);
-	    source.outgoing.push(link);
-	    target.incoming.push(link);
+	    // source.outgoing.push(link);
+	    // target.incoming.push(link);
+	    source.linking.push(link);
+	   	target.linking.push(link);
 	  });
 	console.log(stateById);
   	
   	cntr = cntr.filter(function(d) {
-	    if (d.count = Math.max(d.incoming.length, d.outgoing.length)) {
+	    if (d.count = d.linking.length) {
 	      d[0] = +d.X;
 	      d[1] = +d.Y;
 	      var position = projection(d);
@@ -71,19 +74,24 @@ function ready(error, app, cntr, conn) {
 	    }
 	});
 	console.log(cntr);
-
-  	voronoi(cntr)
-      .forEach(function(d) { d.point.cell = d; });
 	
 	//Bind data and create one path per GeoJSON feature
 	g.append("g")
-		.attr("id", "states")
-		.selectAll("path")
+		.attr("id", "states");
+		
+	d3.select("#states")
+		.selectAll("g")
+		.select("path")
 		.data(topojson.feature(app, app.objects.state).features)
 		.enter()
+		.append("g")
 		.append("path")
+		.each(addCircle)
 		.attr("d", path)
-		.on("click", clicked);
+		.attr("id", function(d) { return d.properties.STATE; })
+		.on("click", clicked)
+		.on("mouseover", displayLine)
+		.on("mouseout", hideLine);
 		
 	g.append("g")
 		.attr("id", "regions")
@@ -109,34 +117,50 @@ function ready(error, app, cntr, conn) {
 	.text(function(d) { return d.properties.NAME; });
 	
 	// Centroid
-	var airport = svg.append("g")
-      .attr("class", "airports")
+	function addCircle(d) {
+		var air = d3.select(this.parentNode)
     .selectAll("g")
-      .data(cntr.sort(function(a, b) { return b.count - a.count; }))
+      .data(cntr.filter(function(D) { return D.STATE == d.properties.STATE; }))
     .enter().append("g")
-      .attr("class", "airport");
-      
-    airport.append("path")
-      .attr("class", "airport-cell")
-      .attr("d", function(d) { return d.cell.length ? "M" + d.cell.join("L") + "Z" : null; });
-      
-    airport.append("g")
+      .attr("class", "airport")
+      .append("g")
       .attr("class", "airport-arcs")
-    .selectAll("path")
-      .data(function(d) { return d.outgoing; })
-    .enter().append("path")
-      .attr("d", function(d) { return path({type: "LineString", coordinates: [d.source, d.target]}); });
-
-  airport.append("circle")
+      .each(addLine);
+	}
+	
+	function addLine(d) {
+		d3.select(this)
+		.append("circle")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .attr("r", function(d, i) { return Math.sqrt(d.count); });
+      d3.select(this)
+		.selectAll("path")
+		.data(function(d) {return d.linking;})
+		.enter().append("path")
+		.attr("d", function(d) { return path({type: "LineString", coordinates: [d.source, d.target]}); });
+	}
 
 };
-	//Create SVG element
+
+function displayLine(d) {
+	d3.select(this.parentNode)
+		.select(".airport")
+		.attr("class", "dis");
+	// d3.select(this.parentNode)
+		// .select(".airport")
+		// .attr("class", "a");
+}
+
+function hideLine(d) {
+	// d3.select(this.parentNode)
+		// .select(".airport")
+		// .classed("a", false);
+	d3.select(this.parentNode)
+		.select(".dis")
+		.attr("class", "airport");
 	
+}
 	
-//Width and height
-	//Define map projection
 function clicked(d) {
 	if (active.node() === this) {
 		d3.selectAll(".region")
@@ -163,36 +187,6 @@ function clicked(d) {
       .duration(750)
       .style("stroke-width", 1.5 / scale + "px")
       .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-	
-	// console.log("clicked");
-	// var x,
-	    // y,
-	    // k;
-	// if (d && centered !== d) {
-		// var centroid = path.centroid(d);
-		// x = centroid[0];
-		// y = centroid[1];
-		// k = 10;
-		// centered = d;
-		// d3.selectAll(".region")
-			// .style("opacity", "0")
-			// .style("transition", "opacity 0.5s linear");
-	// } else {
-		// x = w / 2;
-		// y = h / 2;
-		// k = 1;
-		// centered = null;
-		// d3.selectAll(".region")
-			// .style("opacity", "0.25")
-			// .style("transition", "opacity 1.5s linear");
-	// }
-// 
-	// g.selectAll("path").classed("active", centered &&
-	// function(d) {
-		// return d === centered;
-	// });
-// 
-	// g.transition().duration(750).attr("transform", "translate(" + w / 2 + "," + h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")").style("stroke-width", 1.5 / k + "px");
 }
 
 function reset() {

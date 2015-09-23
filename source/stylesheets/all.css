@@ -5,14 +5,27 @@
 
 #states {
 	fill: #aaa;
+	position:relative;
 }
 
 #states .active {
 	fill: orange;
 }
 
+#states path:hover {
+	fill: blue;
+}
+
+#states g {
+	position: relative;
+	z-index: 20;
+}
+
 #regions {
 	fill: none;
+	display: none;
+	position: relative;
+	z-index:50;
 }
 
 text {
@@ -31,28 +44,30 @@ text {
 	pointer-events: none;
 }
 
-.airport-arcs {
+.airport {
   display: none;
   fill: none;
-  stroke: #000;
+  position: relative;
+  z-index: 100;
 }
 
-.airport-cell {
-  fill: none;
-  pointer-events: all;
+#states g .dis {
+  position: relative;
+  z-index: 100;
 }
+
 
 .airports circle {
-  fill: steelblue;
+  fill: blue;
   stroke: #fff;
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 
-.airport:hover .airport-arcs {
+.airport-arcs path{
   display: inline;
+  stroke: black;
 }
 
-svg:not(:hover) .airport-cell {
-  stroke: #000;
-  stroke-opacity: .2;
+.showLine {
+	display: inline;
 }

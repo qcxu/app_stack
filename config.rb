@@ -17,7 +17,7 @@
 # page "/path/to/file.html", :layout => false
 #
 # With alternative layout
-# page "/path/to/file.html", :layout => :otherlayout
+page "/test.html", :layout => "layout_object"
 #
 # A path which all have the same layout
 # with_layout :admin do
