@@ -6,12 +6,16 @@ var width = svg.attr("width");
 console.log(width);
 var height = svg.attr("height");
 var projection = d3.geo.albers()
-    .translate([width / 1.8, height / 1.4])
-    .scale(1000);
+    .translate([width / 2, height / 2])
+    .scale(1080);
 //Define path generator
 var path = d3.geo.path()
 			.projection(projection);
 			
+var voronoi = d3.geom.voronoi()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; })
+    .clipExtent([[0, 0], [width, height]]);
 			
 svg.append("rect")
 .attr("class", "background")
@@ -82,14 +86,12 @@ function ready(error, app, cntr, conn) {
 		.enter()
 		.append("g")
 		.append("path")
+		.each(addCircle)
 		.attr("d", path)
 		.attr("id", function(d) { return d.properties.STATE; })
 		.on("click", clicked)
-		.on("mouseover", addCircle)
-		.on("mouseout", function() {
-			svg.selectAll(".airport").remove();
-			d3.selectAll(".connected").classed("connected", false);
-			});
+		.on("mouseover", displayLine)
+		.on("mouseout", hideLine);
 		
 	g.append("g")
 		.attr("id", "regions")
@@ -116,41 +118,49 @@ function ready(error, app, cntr, conn) {
 	
 	// Centroid
 	function addCircle(d) {
-		var filtered_cntr = cntr.filter(function(D) { return D.STATE == d.properties.STATE; });
-
-		if(filtered_cntr.length != 0) {
-		
-			var rel = g.append("g")
-			.attr("class", "airport")
- 			.data(filtered_cntr);
-   
-     		rel.append("circle")
-      		.attr("transform", function(g) { return "translate(" + g.x + "," + g.y + ")"; })
-      		.attr("r", function(g, i) { return Math.sqrt(g.count); });
-      
-			rel.selectAll("path")
-			.data(function(g) {return g.linking;})
-			.enter().append("path")
-			.attr("d", function(f) { return path({type: "LineString", coordinates: [f.source, f.target]}); });
-		
-			// Hover linked states
-			var state = filtered_cntr[0].linking;
-			console.log(state);
-			var state_id = state.map(function(g) {
-				return (g.source.STATE == filtered_cntr[0].STATE) ? g.target.STATE:g.source.STATE;
-			});
-			console.log(state_id);
-			state_id.forEach(function(g) {console.log(g);document.getElementById(g).classList.add("connected");});
-			
-			
-			
-		}
-		
+		var air = d3.select(this.parentNode)
+    .selectAll("g")
+      .data(cntr.filter(function(D) { return D.STATE == d.properties.STATE; }))
+    .enter().append("g")
+      .attr("class", "airport")
+      .append("g")
+      .attr("class", "airport-arcs")
+      .each(addLine);
 	}
 	
+	function addLine(d) {
+		d3.select(this)
+		.append("circle")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .attr("r", function(d, i) { return Math.sqrt(d.count); });
+      d3.select(this)
+		.selectAll("path")
+		.data(function(d) {return d.linking;})
+		.enter().append("path")
+		.attr("d", function(d) { return path({type: "LineString", coordinates: [d.source, d.target]}); });
+	}
+
 };
 
+function displayLine(d) {
+	d3.select(this.parentNode)
+		.select(".airport")
+		.attr("class", "dis");
+	// d3.select(this.parentNode)
+		// .select(".airport")
+		// .attr("class", "a");
+}
 
+function hideLine(d) {
+	// d3.select(this.parentNode)
+		// .select(".airport")
+		// .classed("a", false);
+	d3.select(this.parentNode)
+		.select(".dis")
+		.attr("class", "airport");
+	
+}
+	
 function clicked(d) {
 	if (active.node() === this) {
 		d3.selectAll(".region")
@@ -158,7 +168,6 @@ function clicked(d) {
 			.style("transition", "opacity 0.5s linear 0.5s");
 		return reset();
 	}
-	svg.selectAll(".airport").remove();
   	active.classed("active", false);
   	active = d3.select(this).classed("active", true);
 	
@@ -183,7 +192,7 @@ function clicked(d) {
 function reset() {
   active.classed("active", false);
   active = d3.select(null);
-  svg.selectAll(".airport").remove();
+
   g.transition()
       .duration(750)
       .style("stroke-width", "1.5px")

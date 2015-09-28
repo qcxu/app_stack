@@ -8,8 +8,8 @@
 	position:relative;
 }
 
-#states .active {
-	fill: orange;
+#states .active, .connected {
+	fill: blue;
 }
 
 #states path:hover {
@@ -45,7 +45,6 @@ text {
 }
 
 .airport {
-  display: none;
   fill: none;
   position: relative;
   z-index: 100;
@@ -57,13 +56,13 @@ text {
 }
 
 
-.airports circle {
-  fill: blue;
+.airport circle {
+  fill: white;
   stroke: #fff;
   /*pointer-events: none;*/
 }
 
-.airport-arcs path{
+.airport path{
   display: inline;
   stroke: black;
 }
