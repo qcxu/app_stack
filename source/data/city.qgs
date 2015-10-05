@@ -12,7 +12,7 @@
     <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="city20151002122714701" name="city">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="city_v320151002123940193" name="city_v3">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="city_v420151002194514226" name="city_v4">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="city_copy20151002123501186" name="application">
@@ -29,10 +29,10 @@
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>-162.87117114587360334</xmin>
-      <ymin>17.75404091565233955</ymin>
-      <xmax>-65.62435972814941465</xmax>
-      <ymax>66.61790022156945668</ymax>
+      <xmin>-145.76197277345045222</xmin>
+      <ymin>16.29793892650993925</ymin>
+      <xmax>-48.51516135572626354</xmax>
+      <ymax>65.16179823242705993</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>0</projections>
@@ -59,7 +59,7 @@
       <item>city20151002122714701</item>
       <item>city_v220151002122752974</item>
       <item>city_copy20151002123501186</item>
-      <item>city_v320151002123940193</item>
+      <item>city_v420151002194514226</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
@@ -78,9 +78,9 @@
         <legendlayerfile isInOverview="0" layerid="city20151002122714701" visible="0"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="city_v3" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="city_v4" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="city_v320151002123940193" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="city_v420151002194514226" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="application" showFeatureCount="0">
@@ -1186,6 +1186,9 @@
         <edittype widgetv2type="TextEdit" name="STATEFP">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
       <renderer-v2 symbollevels="0" type="singleSymbol">
         <symbols>
@@ -1374,6 +1377,9 @@
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="STATEFP">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
       </edittypes>
@@ -1416,6 +1422,9 @@
         <edittype widgetv2type="TextEdit" name="STATEFP">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
       <renderer-v2 symbollevels="0" type="singleSymbol">
         <symbols>
@@ -1606,6 +1615,9 @@
         <edittype widgetv2type="TextEdit" name="STATEFP">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
@@ -1630,7 +1642,7 @@
         </spatialrefsys>
       </srs>
       <provider encoding="System">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "NAME", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <expressionfields/>
       <map-layer-style-manager current="">
@@ -1839,14 +1851,14 @@
       </edittypes>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <id>city_v320151002123940193</id>
-      <datasource>./city_v3.geojson</datasource>
+      <id>city_v420151002194514226</id>
+      <datasource>./city_v4.shp</datasource>
       <title></title>
       <abstract></abstract>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>city_v3</layername>
+      <layername>city_v4</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs</proj4>
@@ -1876,13 +1888,16 @@
         <edittype widgetv2type="TextEdit" name="STATEFP">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
       <renderer-v2 symbollevels="0" type="singleSymbol">
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0"/>
-              <prop k="color" v="140,23,23,255"/>
+              <prop k="color" v="166,254,213,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0"/>
@@ -2054,6 +2069,9 @@
         <edittype widgetv2type="TextEdit" name="STATEFP">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="isApp">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
     </maplayer>
   </projectlayers>
@@ -2082,9 +2100,11 @@
         <value>cb_2013_us_cbsa_20m_copy20151002122530378</value>
         <value>cb_2013_us_state_20m_copy20151002122128865</value>
         <value>city20151002122714701</value>
+        <value>city_copy20151002123501186</value>
         <value>city_v220151002122752974</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
+        <value>enabled</value>
         <value>enabled</value>
         <value>enabled</value>
         <value>enabled</value>
@@ -2099,8 +2119,10 @@
         <value>2</value>
         <value>2</value>
         <value>2</value>
+        <value>2</value>
       </LayerSnappingToleranceUnitList>
       <LayerSnapToList type="QStringList">
+        <value>to_vertex</value>
         <value>to_vertex</value>
         <value>to_vertex</value>
         <value>to_vertex</value>
@@ -2110,6 +2132,7 @@
       <DefaultSnapType type="QString">off</DefaultSnapType>
       <DefaultSnapTolerance type="double">0</DefaultSnapTolerance>
       <LayerSnappingToleranceList type="QStringList">
+        <value>0.000000</value>
         <value>0.000000</value>
         <value>0.000000</value>
         <value>0.000000</value>
