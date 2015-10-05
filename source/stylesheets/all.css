@@ -3,39 +3,61 @@
 	pointer-events: all;
 }
 
-#states {
-	fill: #aaa;
-	position:relative;
+#cities path{
+	fill: #bdd7e7;
+	stroke: #fff;
+	stroke-width: 0.01em;
+	stroke-linejoin: round;
+	/*stroke-linecap: round;*/
+	stroke-dasharray: 1,1;
+	display: none;
 }
 
-#states .active, .connected {
-	fill: blue;
+#cities .active{
+	fill: #6baed6;
+	display: none;
 }
 
-#states path:hover {
-	fill: blue;
+#cities .connected {
+	fill: #6baed6;
 }
 
-#states g {
-	position: relative;
-	z-index: 20;
+#cities path:hover {
+	fill: #6baed6;
+	display: none;
 }
 
 #regions {
 	fill: none;
 	display: none;
-	position: relative;
-	z-index:50;
+	pointer-events: none;
 }
 
 text {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 20px;
-	pointer-events: none;
-	opacity: 0.25;
+	
 }
 
-#region-borders {
+#state-text text {
+	font-size: 0.6em;
+	opacity: 0.2;
+	pointer-events: none;
+}
+
+#city-text text {
+	font-size: 0.1em;
+	opacity: 0.8;
+	display: none;
+	pointer-events: none;
+	fill: #2171b5;
+}
+
+#states {
+	fill: #bdd7e7;
+	pointer-events: none;
+}
+
+#state-borders {
 	fill: none;
 	stroke: #fff;
 	stroke-width: 1.5px;
@@ -44,27 +66,24 @@ text {
 	pointer-events: none;
 }
 
+.show {
+	display:inline !important;
+}
+
 .airport {
   fill: none;
-  position: relative;
-  z-index: 100;
 }
-
-#states g .dis {
-  position: relative;
-  z-index: 100;
-}
-
 
 .airport circle {
   fill: white;
-  stroke: #fff;
-  /*pointer-events: none;*/
+  /*stroke: #fff;*/
+  pointer-events: none;
 }
 
 .airport path{
   display: inline;
-  stroke: black;
+  stroke: #2171b5;
+  pointer-events: none;
 }
 
 .showLine {

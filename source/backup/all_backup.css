@@ -1,0 +1,90 @@
+.background {
+	fill: none;
+	pointer-events: all;
+}
+
+#cities {
+	fill: #aaa;
+	display: none;
+	stroke: #fff;
+	stroke-width: 0.5px;
+	stroke-linejoin: round;
+	stroke-cap: round;
+}
+
+#cities .active, .connected {
+	fill: blue;
+}
+
+#cities path:hover {
+	fill: blue;
+}
+
+#states {
+	fill: #aaa;
+}
+
+#state_text text {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	pointer-events: none;
+	opacity: 0.25;
+	text-align: center;
+	
+}
+
+#city-names {
+	display: none;
+}
+
+#city-names text {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1px;
+	pointer-events: none;
+}
+
+.show {
+	display: inline !important;
+}
+
+#state-borders {
+	fill: none;
+	stroke: #fff;
+	stroke-width: 0.5px;
+	stroke-linejoin: round;
+	stroke-cap: round;
+	pointer-events: none;
+}
+
+#city-borders {
+	fill: none;
+	stroke: #fff;
+	stroke-width: 0.5px;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	/*stroke-dasharray: 2,2;*/
+	pointer-events: none;
+	display:none;
+}
+
+.airport {
+  fill: none;
+  position: relative;
+  z-index: 100;
+}
+
+
+.airport circle {
+  fill: white;
+  stroke: #fff;
+  /*pointer-events: none;*/
+}
+
+.airport path{
+  display: inline;
+  stroke: black;
+}
+
+.showLine {
+	display: inline;
+}
