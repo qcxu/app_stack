@@ -66,7 +66,10 @@ function ready(error, region, state, city, cntr, conn) {
 	        // console.log(target);
 	    // source.outgoing.push(link);
 	    // target.incoming.push(link);
-	    source.linking.push(link);
+	    // source.linking.push(link);
+	   	// target.linking.push(link);
+	   	source.linking.push(link);
+	   	link = {source: target, target: source};
 	   	target.linking.push(link);
 	  });
 	console.log(stateById);
@@ -143,7 +146,7 @@ function ready(error, region, state, city, cntr, conn) {
 	.enter().append("text")
 	.attr("class", function(d) { return "city " + d.properties.CBSAFP; })
 	.attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-	//.attr("dx", "-2em")
+	.attr("dy", "-1em")
 	.attr("text-anchor", "middle")
 	.text(function(d) { return d.properties.NAME; });
 	
@@ -164,22 +167,18 @@ function ready(error, region, state, city, cntr, conn) {
 	// Centroid
 	function addCircle(d) {
 		var filtered_cntr = cntr.filter(function(D) { return D.CBSAFP == d.properties.CBSAFP; });
-
+		console.log(filtered_cntr);
 		if(filtered_cntr.length != 0 & zoom.scale() > 4) {
 		
 			var rel = g.append("g")
 			.attr("class", "airport")
  			.data(filtered_cntr);
-   
-     		
-      
+     		    
 			rel.selectAll("path")
 			.data(function(g) {return g.linking;})
 			.enter().append("path")
 			.attr("d", function(f) { return path({type: "LineString", coordinates: [f.source, f.target]}); })
-			.style("stroke-width", 1/zoom.scale());
-			
-			
+			.style("stroke-width", 1/zoom.scale());		
 		
 			// Hover linked states
 			var state = filtered_cntr[0].linking;
@@ -190,11 +189,17 @@ function ready(error, region, state, city, cntr, conn) {
 			//console.log(state_id);
 			state_id.forEach(function(g) {document.getElementById(g).classList.add("connected");});
 			
-			rel.append("circle")
+      		rel.selectAll("circle")
+      		.data(function(g) {return g.linking;})
+      		.enter().append("circle")
+      		.attr("transform", function(f) { return "translate(" + f.target.x + "," + f.target.y + ")"; })
+      		.attr("r", 1/zoom.scale());
+      		
+      		rel.append("circle")
       		.attr("transform", function(g) { return "translate(" + g.x + "," + g.y + ")"; })
       		.attr("r", 1/zoom.scale());
 		
-		}
+		} 
 		
 	}
 	
@@ -207,9 +212,6 @@ function clicked(d) {
 		var t = zoom.translate();
 		var s = zoom.scale();
 		console.log(s);
-		d3.selectAll("#state-text text")
-			.style("opacity", "0.2")
-			.style("transition", "opacity 0.5s linear 0.5s");
 		return reset(t,s);
 	}
 	svg.selectAll(".airport").remove();
@@ -238,26 +240,39 @@ function reset(t,s) {
   active.classed("active", false);
   active = d3.select(null);
   svg.selectAll(".airport").remove();
+  d3.selectAll("#state-text text")
+			.style("opacity", "0.2")
+			.style("transition", "opacity 0.3s linear 0.5s");
   g.transition()
       .duration(750)
       .style("stroke-width", "1.5px")
       .attr("transform", "translate(" + t + ")scale(" + s + ")");
+      // .each("end", g.call(zoom));
 }
 
 function zoomed() {
-  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	var a = d3.selectAll(".active");
+	if (d3.selectAll(".active")[0].length > 0) {
+		reset(zoom.translate(), zoom.scale());
+		console.log("reset");
+	} else {
+		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	}
+  
   d3.selectAll(".connected").classed("connected", false);
   d3.selectAll(".active").classed("active", false);
   //console.log(zoom.scale());
   if (zoom.scale() >= 2 && zoom.scale() <= 4) {
   	g.selectAll("#cities path").classed("show", true);
   	g.selectAll("#city-text text").classed("show", false);
+	svg.selectAll(".airport").remove();
   } else if (zoom.scale() > 4) {
   	g.selectAll("#cities path").classed("show", true);
   	g.selectAll("#city-text text").classed("show", true);
   } else {
   	g.selectAll("#cities path").classed("show", false);
   	g.selectAll("#city-text text").classed("show", false);
+  	svg.selectAll(".airport").remove();
   }
   
 }
